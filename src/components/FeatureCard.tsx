@@ -2,7 +2,6 @@ import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader } from "./ui/card"
 import { ArrowUpCircle } from "lucide-react"
-import { motion } from "framer-motion"
 
 interface FeatureCardProps {
   title: string
@@ -25,38 +24,30 @@ const statusLabels = {
   done: "Done",
 }
 
-const MotionCard = motion(Card)
-
-export function FeatureCard({ title, description, votes }: FeatureCardProps) {
+export function FeatureCard({ title, description, status, votes }: FeatureCardProps) {
   return (
-    <MotionCard 
-      className="transition-all cursor-grab active:cursor-grabbing"
-    >
+    <Card className="transition-all cursor-grab active:cursor-grabbing">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="space-y-1">
           <h3 className="text-sm font-semibold leading-none tracking-tight">
             {title}
           </h3>
+          <Badge variant="secondary" className={statusColors[status]}>
+            {statusLabels[status]}
+          </Badge>
         </div>
-        <motion.div whileTap={{ scale: 0.95 }}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex flex-col items-center space-y-1"
-          >
-            <motion.div
-              whileHover={{ y: -2 }}
-              transition={{ type: "spring", stiffness: 400 }}
-            >
-              <ArrowUpCircle className="h-4 w-4" />
-            </motion.div>
-            <span className="text-sm font-medium">{votes}</span>
-          </Button>
-        </motion.div>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex flex-col items-center space-y-1"
+        >
+          <ArrowUpCircle className="h-4 w-4" />
+          <span className="text-sm font-medium">{votes}</span>
+        </Button>
       </CardHeader>
       <CardContent>
         <p className="text-xs text-muted-foreground">{description}</p>
       </CardContent>
-    </MotionCard>
+    </Card>
   )
 }
