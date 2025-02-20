@@ -27,23 +27,20 @@ const statusLabels = {
 
 const MotionCard = motion(Card)
 
-export function FeatureCard({ title, description, status, votes }: FeatureCardProps) {
+export function FeatureCard({ title, description, votes }: FeatureCardProps) {
   return (
     <MotionCard 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ scale: 1.02 }}
-      className="transition-all"
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="transition-all cursor-grab active:cursor-grabbing"
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="space-y-1">
-          <h3 className="text-lg font-semibold leading-none tracking-tight">
+          <h3 className="text-sm font-semibold leading-none tracking-tight">
             {title}
           </h3>
-          <Badge variant="secondary" className={statusColors[status]}>
-            {statusLabels[status]}
-          </Badge>
         </div>
         <motion.div whileTap={{ scale: 0.95 }}>
           <Button
@@ -62,7 +59,7 @@ export function FeatureCard({ title, description, status, votes }: FeatureCardPr
         </motion.div>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-xs text-muted-foreground">{description}</p>
       </CardContent>
     </MotionCard>
   )
