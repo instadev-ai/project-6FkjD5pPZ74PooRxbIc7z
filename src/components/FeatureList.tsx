@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { DndProvider, useDrag, useDrop } from "react-dnd"
-import { HTML5Backend } from "react-dnd-html5-backend"
+import { useDrag, useDrop } from "react-dnd"
 import { FeatureCard } from "./FeatureCard"
 import { Search } from "lucide-react"
 import { Input } from "./ui/input"
@@ -67,15 +66,15 @@ interface DraggableFeatureProps {
 }
 
 const DraggableFeature = ({ feature, index, moveFeature }: DraggableFeatureProps) => {
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: "feature",
     item: { index, id: feature.id, status: feature.status },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-  })
+  }))
 
-  const [, drop] = useDrop({
+  const [, drop] = useDrop(() => ({
     accept: "feature",
     hover: (item: { index: number }) => {
       if (item.index !== index) {
@@ -83,7 +82,7 @@ const DraggableFeature = ({ feature, index, moveFeature }: DraggableFeatureProps
         item.index = index
       }
     },
-  })
+  }))
 
   return (
     <div
@@ -109,13 +108,13 @@ interface ColumnProps {
 }
 
 const Column = ({ status, features, onDrop, moveFeature }: ColumnProps) => {
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop(() => ({
     accept: "feature",
     drop: (item: Feature) => onDrop(item, status),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
-  })
+  }))
 
   return (
     <div className="space-y-4">
@@ -165,33 +164,31 @@ export function FeatureList() {
     filteredFeatures.filter(feature => feature.status === status)
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="space-y-8">
-        <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-          <h1 className="text-3xl font-bold">Feature Requests</h1>
-          <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search features..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 w-full md:w-[300px]"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {(Object.keys(columns) as Array<Feature["status"]>).map((status) => (
-            <Column
-              key={status}
-              status={status}
-              features={getFeaturesByStatus(status)}
-              onDrop={handleDrop}
-              moveFeature={moveFeature}
-            />
-          ))}
+    <div className="space-y-8">
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+        <h1 className="text-3xl font-bold">Feature Requests</h1>
+        <div className="relative">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search features..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8 w-full md:w-[300px]"
+          />
         </div>
       </div>
-    </DndProvider>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {(Object.keys(columns) as Array<Feature["status"]>).map((status) => (
+          <Column
+            key={status}
+            status={status}
+            features={getFeaturesByStatus(status)}
+            onDrop={handleDrop}
+            moveFeature={moveFeature}
+          />
+        ))}
+      </div>
+    </div>
   )
 }
