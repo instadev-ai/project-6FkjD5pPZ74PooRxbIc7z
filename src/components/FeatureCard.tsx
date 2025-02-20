@@ -30,10 +30,6 @@ const MotionCard = motion(Card)
 export function FeatureCard({ title, description, votes }: FeatureCardProps) {
   return (
     <MotionCard 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.2 }}
       className="transition-all cursor-grab active:cursor-grabbing"
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
